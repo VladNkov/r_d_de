@@ -18,14 +18,14 @@ def main() -> None:
 
     bronze_df = bronze.build_bronze()
 
-    silver_df = silver.build_silver(bronze_df)
-    silver.write_silver_partitioned(silver_df)
+    # silver_df = silver.build_silver(bronze_df)
+    # silver.write_silver_partitioned(silver_df)
 
-    gold.build_repo_activity(silver_df)
-    gold.build_activity_per_minute(silver_df)
-    gold.build_push_commits_by_repo(silver_df)
+    # gold.build_repo_activity(silver_df)
+    # gold.build_activity_per_minute(silver_df)
+    # gold.build_push_commits_by_repo(silver_df)
 
-    print("[run] pipeline complete")
+    # print("[run] pipeline complete")
 
 
 if __name__ == "__main__":
