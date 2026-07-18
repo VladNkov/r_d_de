@@ -59,6 +59,6 @@ def build_bronze() -> pl.DataFrame:
     bronze_df.write_parquet(config.BRONZE_FILE)
 
     size_mb = os.path.getsize(config.BRONZE_FILE) / 1_000_000
-    print(f"[bronze] saved {os.path.basename(config.BRONZE_FILE)} {size_mb:.0f} MB, {bronze_df.height} rows")
+    print(f"[bronze] saved {os.path.basename(config.BRONZE_FILE)} {size_mb:.1f} MB, {bronze_df.height} rows")
  
     return bronze_df
