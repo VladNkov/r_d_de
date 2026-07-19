@@ -33,8 +33,6 @@ def build_silver(bronze: pl.DataFrame) -> pl.DataFrame:
         .filter(pl.col("event_id").is_not_null())
         .filter(pl.col("created_at").is_not_null())
         .unique(subset=["event_id"]))
-    
-    # ic(silver_df.head(5))
 
     Path(config.SILVER_FILE).parent.mkdir(parents=True, exist_ok=True)
 
@@ -48,7 +46,6 @@ def build_silver(bronze: pl.DataFrame) -> pl.DataFrame:
 
 
 def write_silver_partitioned(silver: pl.DataFrame) -> None:
-    # raise NotImplementedError("Завдання 3: запишіть партиціонований silver за event_type")
 
     output_dir = Path(config.SILVER_PARTITIONED_DIR)
     output_dir.mkdir(parents=True, exist_ok=True)

@@ -13,12 +13,27 @@ TODO (Завдання 4, 5, 6): реалізуйте три функції ни
 from __future__ import annotations
 
 import polars as pl
+import os
 
 from . import config
+from pathlib import Path
 
 
 def build_repo_activity(silver: pl.DataFrame) -> pl.DataFrame:
-    raise NotImplementedError("Завдання 4: реалізуйте repo_activity згідно з CONTRACTS.md")
+
+    repo_activity = (silver.group_by("repo_name").agg(
+        [pl.len().cast(pl.Int64).alias("event_count"),
+        pl.col("event_type").n_unique().cast(pl.Int64).alias("distinct_event_types")]
+        ).sort("event_count", descending=True))
+    
+    Path(config.GOLD_REPO_ACTIVITY).parent.mkdir(parents=True, exist_ok=True)
+
+    repo_activity.write_parquet(config.GOLD_REPO_ACTIVITY) 
+
+    size_mb = os.path.getsize(config.GOLD_REPO_ACTIVITY) / 1_000_000
+    print(f"[gold_repo_activity] saved {os.path.basename(config.GOLD_REPO_ACTIVITY)} {size_mb:.1f} MB, {repo_activity.height} rows")
+
+    return repo_activity
 
 
 def build_activity_per_minute(silver: pl.DataFrame) -> pl.DataFrame:
