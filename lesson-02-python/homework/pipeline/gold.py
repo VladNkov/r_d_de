@@ -53,7 +53,6 @@ def build_activity_per_minute(silver: pl.DataFrame) -> pl.DataFrame:
 
 
 def build_push_commits_by_repo(silver: pl.DataFrame) -> pl.DataFrame:
-    # raise NotImplementedError("Завдання 6: реалізуйте push_commits_by_repo згідно з CONTRACTS.md")
 
     push_commits_by_repo = (silver.filter(pl.col("event_type") == "PushEvent")
         .group_by("repo_name").agg(pl.len().cast(pl.Int64).alias("push_events"),

@@ -23,7 +23,6 @@ from . import config
 
 
 def build_bronze() -> pl.DataFrame:
-    # raise NotImplementedError("Завдання 1: реалізуйте bronze згідно з CONTRACTS.md")
 
     lazy_df = pl.scan_ndjson(config.LANDING_FILE, schema=config.LANDING_SCHEMA)
 
