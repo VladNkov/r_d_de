@@ -37,7 +37,20 @@ def build_repo_activity(silver: pl.DataFrame) -> pl.DataFrame:
 
 
 def build_activity_per_minute(silver: pl.DataFrame) -> pl.DataFrame:
-    raise NotImplementedError("Завдання 5: реалізуйте activity_per_minute згідно з CONTRACTS.md")
+    # raise NotImplementedError("Завдання 5: реалізуйте activity_per_minute згідно з CONTRACTS.md")
+
+    activity_per_minute = (silver.with_columns(pl.col("created_at").dt.truncate("1m").alias("minute"))
+        .group_by("minute").agg(pl.len().cast(pl.Int64).alias("event_count"))
+        .sort("minute"))
+    
+    Path(config.GOLD_ACTIVITY_PER_MINUTE).parent.mkdir(parents=True, exist_ok=True)
+
+    activity_per_minute.write_parquet(config.GOLD_ACTIVITY_PER_MINUTE)
+
+    size_mb = os.path.getsize(config.GOLD_ACTIVITY_PER_MINUTE) / 1_000_000
+    print(f"[gold_activity_per_minute] saved {os.path.basename(config.GOLD_ACTIVITY_PER_MINUTE)} {size_mb:.3f} MB, {activity_per_minute.height} rows")
+
+    return activity_per_minute
 
 
 def build_push_commits_by_repo(silver: pl.DataFrame) -> pl.DataFrame:

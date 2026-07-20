@@ -22,7 +22,7 @@ def main() -> None:
     silver.write_silver_partitioned(silver_df)
 
     gold.build_repo_activity(silver_df)
-    # gold.build_activity_per_minute(silver_df)
+    gold.build_activity_per_minute(silver_df)
     # gold.build_push_commits_by_repo(silver_df)
 
     print("[run] pipeline complete")
