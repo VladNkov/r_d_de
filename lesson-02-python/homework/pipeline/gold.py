@@ -31,13 +31,12 @@ def build_repo_activity(silver: pl.DataFrame) -> pl.DataFrame:
     repo_activity.write_parquet(config.GOLD_REPO_ACTIVITY) 
 
     size_mb = os.path.getsize(config.GOLD_REPO_ACTIVITY) / 1_000_000
-    print(f"[gold_repo_activity] saved {os.path.basename(config.GOLD_REPO_ACTIVITY)} {size_mb:.1f} MB, {repo_activity.height} rows")
+    print(f"[gold_repo_activity] saved {os.path.basename(config.GOLD_REPO_ACTIVITY)} {size_mb:.3f} MB, {repo_activity.height} rows")
 
     return repo_activity
 
 
 def build_activity_per_minute(silver: pl.DataFrame) -> pl.DataFrame:
-    # raise NotImplementedError("Завдання 5: реалізуйте activity_per_minute згідно з CONTRACTS.md")
 
     activity_per_minute = (silver.with_columns(pl.col("created_at").dt.truncate("1m").alias("minute"))
         .group_by("minute").agg(pl.len().cast(pl.Int64).alias("event_count"))
@@ -54,4 +53,17 @@ def build_activity_per_minute(silver: pl.DataFrame) -> pl.DataFrame:
 
 
 def build_push_commits_by_repo(silver: pl.DataFrame) -> pl.DataFrame:
-    raise NotImplementedError("Завдання 6: реалізуйте push_commits_by_repo згідно з CONTRACTS.md")
+    # raise NotImplementedError("Завдання 6: реалізуйте push_commits_by_repo згідно з CONTRACTS.md")
+
+    push_commits_by_repo = (silver.filter(pl.col("event_type") == "PushEvent")
+        .group_by("repo_name").agg(pl.len().cast(pl.Int64).alias("push_events"),
+        pl.col("commit_count").sum().cast(pl.Int64).alias("total_commits")))
+    
+    Path(config.GOLD_PUSH_COMMITS).parent.mkdir(parents=True, exist_ok=True)
+
+    push_commits_by_repo.write_parquet(config.GOLD_PUSH_COMMITS)
+
+    size_mb = os.path.getsize(config.GOLD_PUSH_COMMITS) / 1_000_000
+    print(f"[gold_push_commits_by_repo] saved {os.path.basename(config.GOLD_PUSH_COMMITS)} {size_mb:.3f} MB, {push_commits_by_repo.height} rows")
+
+    return push_commits_by_repo
