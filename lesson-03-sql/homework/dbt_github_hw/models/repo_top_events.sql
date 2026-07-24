@@ -8,7 +8,7 @@ WITH event_count_cte as (
         event_type,
         repo_name,
         count(*) as event_count
-    FROM stg_events
+    FROM {{ ref('stg_events') }} 
     GROUP BY event_type, repo_name)
         SELECT event_type,
             repo_name, event_count, 
