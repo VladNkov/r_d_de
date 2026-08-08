@@ -6,13 +6,13 @@
 WITH watch_events AS (
 SELECT DISTINCT
     repo_name
-FROM {{ ref('stg_events') }} AS watch_events
+FROM {{ ref('stg_events') }} 
 WHERE event_type = 'WatchEvent'),
     
 push_events AS (
 SELECT DISTINCT
     repo_name
-FROM {{ ref('stg_events') }} AS push_events
+FROM {{ ref('stg_events') }}
 WHERE event_type = 'PushEvent')
 
 SELECT
