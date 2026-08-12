@@ -47,15 +47,11 @@ def build_bronze() -> pl.DataFrame:
 
             pl.col("payload").struct.field("commits").list.len().fill_null(0).cast(pl.Int64).alias("commit_count")
         ])
-    #перевірка схеми без виконання повного обчислення
-    # bronze_df = bronze_lazy.collect_schema() 
-    # ic(bronze_df)
+
 
     bronze_df = bronze_lazy.collect()
 
-    Path(config.BRONZE_FILE).parent.mkdir(parents=True, exist_ok=True)
-
-    bronze_df.write_parquet(config.BRONZE_FILE)
+    bronze_df.write_parquet(config.BRONZE_FILE, mkdir=True)
 
     size_mb = os.path.getsize(config.BRONZE_FILE) / 1_000_000
     print(f"[bronze] saved {os.path.basename(config.BRONZE_FILE)} {size_mb:.1f} MB, {bronze_df.height} rows")
