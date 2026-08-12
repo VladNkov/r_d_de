@@ -28,26 +28,16 @@ def build_bronze() -> pl.DataFrame:
 
     bronze_lazy = lazy_df.select([
             pl.col("id").alias("event_id"),
-
             pl.col("type").alias("event_type"),
-
             pl.col("actor").struct.field("id").alias("actor_id"),
-
             pl.col("actor").struct.field("login").alias("actor_login"),
-
             pl.col("repo").struct.field("id").alias("repo_id"),
-
             pl.col("repo").struct.field("name").alias("repo_name"),
-
             pl.col("created_at").str.to_datetime("%Y-%m-%dT%H:%M:%SZ", time_zone="UTC"),
-
             pl.col("public"),
-
             pl.col("payload").struct.field("action").alias("action"),
-
             pl.col("payload").struct.field("commits").list.len().fill_null(0).cast(pl.Int64).alias("commit_count")
         ])
-
 
     bronze_df = bronze_lazy.collect()
 
