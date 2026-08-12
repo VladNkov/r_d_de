@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "L02 homework — GitHub Archive ETL pipeline (Polars)"
 requires-python = "==3.12.*"
 dependencies = [
-  "icecream>=2.2.0",
   "polars>=1.40.1",
   "pyarrow>=24.0.0",
 ]
