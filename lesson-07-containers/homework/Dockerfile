@@ -33,7 +33,7 @@ RUN mkdir /cache && chown appuser:appuser /cache
 
 USER appuser
 
-
-
 ENTRYPOINT [ "python", "gh_ingest.py" ]
 
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+  CMD python -c "import psycopg" || exit 1
