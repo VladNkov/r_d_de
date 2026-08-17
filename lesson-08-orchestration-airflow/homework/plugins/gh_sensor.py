@@ -35,3 +35,4 @@ class GHArchiveSensor(BaseSensorOperator):
                 return response.status == 200
         except Exception:
             return False
+        
